@@ -4,16 +4,30 @@
 
 - [`PHP`](https://www.php.net/downloads) 8.3 or higher.
 - [`Composer`](https://getcomposer.org/download/) for dependency management.
-- [`Yii2`](https://github.com/yiisoft/yii2/tree/22.0) 22.0 development branch.
+
+The package has no runtime dependencies and needs no framework or PHP extension beyond the PHP core.
 
 ## Installation
 
-Install the extension with [Composer](https://getcomposer.org/download/).
+Install the package with [Composer](https://getcomposer.org/download/).
 
 ```bash
-composer require github_username/github_repository-name "yiisoft/yii2:^22.0@dev"
+composer require php-forge/diff:^0.1
 ```
 
-The application must explicitly allow the Yii development branch, as shown in the command above.
+Every class lives in the `PHPForge\Diff` namespace and is loaded through the Composer autoloader. There is nothing to
+register or configure: instantiate `LineDiffer` and call `diff()`, or `UnifiedDiffRenderer` and call `render()`.
+
+```php
+use PHPForge\Diff\{LineDiffer, UnifiedDiffRenderer};
+
+$lines = (new LineDiffer())->diff("first\nsecond", "first\nthird");
+$patch = (new UnifiedDiffRenderer())->render("first\nsecond\n", "first\nthird\n", 'a/notes.txt', 'b/notes.txt');
+```
+
+## Next steps
+
+- 🧮 [Algorithms guide](algorithms.md)
+- 💡 [Usage examples](examples.md)
 
 [Back to documentation](../README.md#documentation)

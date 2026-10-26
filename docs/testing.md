@@ -13,11 +13,16 @@ Tool references:
 - [Infection](https://infection.github.io/) for mutation testing.
 - [Markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) for Markdown linting.
 - [PHPStan](https://phpstan.org/) for static analysis.
-- [PHPUnit](https://phpunit.de/) for unit tests.
 - [Prettier](https://prettier.io/) for Markdown and YAML formatting checks.
 - [Rector](https://github.com/rectorphp/rector) for automated refactoring.
+- [Testo](https://github.com/php-testo/testo) for unit tests and benchmarks.
 - [Yamllint](https://github.com/adrienverge/yamllint) for YAML linting.
 - [Zizmor](https://github.com/zizmorcore/zizmor) for GitHub Actions security audits.
+
+The Testo configuration lives in `testo.php`: the `Unit` suite reads `tests/Unit` and the `Bench` suite reads
+`tests/Bench`. The Git compatibility cases live in `tests/Fixtures/git-cases.json`: each one stores two line lists and
+the edit operations of `git diff --no-index -U100000` run without user or system configuration
+(`GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1`), since a configured `diff.algorithm` changes the result.
 
 ## Automated refactoring (Rector)
 
@@ -32,6 +37,17 @@ Preview the refactoring without modifying files.
 ```bash
 composer rector-check
 ```
+
+## Benchmarks (Testo)
+
+Run the benchmarks that measure `LineDiffer` on its own and behind `UnifiedDiffRenderer` on the same generated input.
+
+```bash
+composer bench
+```
+
+The script runs `testo --type=bench`. Timings depend on the machine and the PHP version, so compare results from the
+same run.
 
 ## Coding standards (ECS)
 
@@ -57,19 +73,21 @@ composer check-dependencies
 
 ## Mutation testing (Infection)
 
-Run mutation testing.
-
-```bash
-composer mutation
-```
-
-Run mutation testing with PHPStan static analysis enabled.
+Run mutation testing with PHPStan static analysis enabled. Infection runs the Testo suites through
+`testo/bridge-infection`. This is the command CI runs.
 
 ```bash
 composer mutation-static
 ```
 
-Thresholds, thread count and memory options live in `infection.json5`. CI enforces the same thresholds.
+Run mutation testing without static analysis.
+
+```bash
+composer mutation
+```
+
+Both runs reach the required score without ignored mutants. Thresholds, thread count and memory options live in
+`infection.json5`; the package requires a 100 % mutation score indicator (MSI). CI enforces the same thresholds.
 
 ## Repository quality checks
 
@@ -96,18 +114,39 @@ The linter configuration lives in `.github/linters`, and the Prettier configurat
 
 ## Static analysis (PHPStan)
 
-Run static analysis.
+Run static analysis at level max.
 
 ```bash
 composer static
 ```
 
-## Unit tests (PHPUnit)
+## Unit tests (Testo)
 
-Run the full test suite.
+Run the test suites without the benchmarks.
 
 ```bash
 composer tests
+```
+
+The script runs `testo --type=!bench`. CI runs the same command on PHP 8.3, 8.4 and 8.5, on Ubuntu and Windows, and
+uploads the coverage to Codecov.
+
+### Running one test
+
+Filter the tests by class or method name (the match is case-sensitive), and print a single JSON summary with the failed
+tests instead of the terminal report.
+
+```bash
+vendor/bin/testo --json --filter=LineDifferTest
+vendor/bin/testo --json --filter=matchesGitEditOperations
+```
+
+### Code coverage
+
+Collect coverage with PCOV or Xdebug enabled and write a Clover XML report.
+
+```bash
+vendor/bin/testo --coverage-clover=runtime/clover.xml
 ```
 
 ## Workflow security checks
@@ -139,16 +178,22 @@ composer zizmor -- --offline
 ```
 
 Report hosted CI execution and its PHP/OS matrix separately from these local commands. Keep generated reports in ignored
-`internal/`.
+`runtime/` or `internal/`.
 
 ## Passing extra arguments
 
 Composer scripts support forwarding additional arguments using `--`.
 
-Run PHPUnit with code coverage report generation.
+Run the Testo suites with a Clover coverage report.
 
 ```bash
-composer tests -- --coverage-html internal/coverage
+composer tests -- --coverage-clover=runtime/clover.xml
+```
+
+Run only the tests of one suite.
+
+```bash
+composer tests -- --suite=Unit
 ```
 
 Run PHPStan with a different memory limit.
@@ -156,5 +201,11 @@ Run PHPStan with a different memory limit.
 ```bash
 composer static -- --memory-limit=512M
 ```
+
+## Next steps
+
+- 📚 [Installation guide](installation.md)
+- 🧮 [Algorithms guide](algorithms.md)
+- 💡 [Usage examples](examples.md)
 
 [Back to documentation](../README.md#documentation)

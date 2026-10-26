@@ -14,6 +14,6 @@
         directories: ["src"],
     },
     staticAnalysisToolOptions: "--memory-limit=-1",
-    testFrameworkExtraArgs: "-d memory_limit=-1",
+    testFramework: "testo",
     threads: "max",
 }
