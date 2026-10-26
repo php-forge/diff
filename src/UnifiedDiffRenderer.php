@@ -9,9 +9,11 @@ use LogicException;
 use function array_key_last;
 use function array_map;
 use function array_slice;
+use function count;
 use function explode;
 use function implode;
 use function max;
+use function min;
 use function preg_match;
 use function preg_replace;
 use function rtrim;
@@ -76,9 +78,11 @@ final readonly class UnifiedDiffRenderer
             return '';
         }
 
-        $context = max(0, $context);
         $oldLines = self::splitLines($old);
         $edits = $this->edits($old, $new, $oldLines, self::splitLines($new));
+
+        // A context longer than the script shows every line already, and capping it keeps the hunk bounds integers.
+        $context = min(max(0, $context), count($edits));
 
         $output = ["--- {$fromLabel}", "+++ {$toLabel}"];
 
@@ -155,6 +159,12 @@ final readonly class UnifiedDiffRenderer
             if ($op !== DiffOp::Remove) {
                 $newBefore++;
             }
+        }
+
+        if ($oldBefore !== count($oldLines) || $newBefore !== count($newLines)) {
+            throw new LogicException(
+                self::SCRIPT_MISMATCH,
+            );
         }
 
         return $edits;

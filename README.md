@@ -21,9 +21,6 @@
     <a href="https://github.com/php-forge/diff/actions/workflows/security.yml" target="_blank">
         <img src="https://img.shields.io/github/actions/workflow/status/php-forge/diff/security.yml?style=for-the-badge&label=Security&logo=github" alt="Security">
     </a>
-    <a href="https://claude.com/claude-code" target="_blank">
-        <img src="https://img.shields.io/badge/Built%20with-Claude%20Code-D97757.svg?style=for-the-badge&logo=claude&logoColor=white" alt="Built with Claude Code">
-    </a>
 </p>
 
 <p align="center">
@@ -57,8 +54,7 @@ Every input line appears exactly once, so dropping the `Add` lines reconstructs 
 reconstructs `$new`.
 
 ```php
-use PHPForge\Diff\DiffOp;
-use PHPForge\Diff\LineDiffer;
+use PHPForge\Diff\{DiffOp, LineDiffer};
 
 $old = "apple\nbanana\ncherry";
 $new = "apple\nblueberry\ncherry";
@@ -79,7 +75,8 @@ foreach ((new LineDiffer())->diff($old, $new) as $line) {
  cherry
 ```
 
-`UnifiedDiffRenderer` turns two texts into the output of `git diff`, hunk headers and function context included.
+`UnifiedDiffRenderer` turns two texts into a unified diff in Git's format, hunk headers and function context included,
+without the `diff --git` and `index` lines.
 
 ```php
 use PHPForge\Diff\UnifiedDiffRenderer;
@@ -102,14 +99,15 @@ echo (new UnifiedDiffRenderer())->render($old, $new, 'a/fruit.txt', 'b/fruit.txt
 
 ## What you get
 
-| Class                 | Result                                                  | Cost                                         |
-| --------------------- | ------------------------------------------------------- | -------------------------------------------- |
-| `LineDiffer`          | The edit script of `git diff` with its default settings | O((N + M) · D) time, linear memory           |
-| `UnifiedDiffRenderer` | The text of `git diff --unified=<n>`                    | The injected differ plus one pass over edits |
+| Class                 | Result                                                      | Cost                                         |
+| --------------------- | ----------------------------------------------------------- | -------------------------------------------- |
+| `LineDiffer`          | The edit script of `git diff` with its default settings     | O((N + M) · D) time, linear memory           |
+| `UnifiedDiffRenderer` | The text of `git diff --unified=<n>` from the `---` line on | The injected differ plus one pass over edits |
 
 N and M are the line counts of `$old` and `$new`, and D is the edit distance. Like Git, `LineDiffer` favours readable
-scripts over the shortest one, so its edit count is not always minimal. See the [algorithms guide](docs/algorithms.md)
-for the pipeline and its trade-offs.
+scripts over the shortest one, so its edit count is not always minimal. Unlike Git, it has no cost limit, so on very
+expensive inputs its script can differ from Git's. See the [algorithms guide](docs/algorithms.md) for the pipeline and
+its trade-offs.
 
 ## Documentation
 
@@ -129,6 +127,12 @@ for the pipeline and its trade-offs.
 [![Codecov](https://img.shields.io/codecov/c/github/php-forge/diff.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Coverage)](https://codecov.io/github/php-forge/diff)
 [![PHPStan Level Max](https://img.shields.io/badge/PHPStan-Level%20Max-4F5D95.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/php-forge/diff/actions/workflows/static.yml)
 [![Quality](https://img.shields.io/github/actions/workflow/status/php-forge/diff/quality.yml?style=for-the-badge&label=Quality&logo=github)](https://github.com/php-forge/diff/actions/workflows/quality.yml)
+
+## Built with AI
+
+[![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-D97757.svg?style=for-the-badge&logo=claude&logoColor=white)](https://claude.com/claude-code)
+[![Reviewed by Codex](https://img.shields.io/badge/Reviewed%20by-Codex-10A37F.svg?style=for-the-badge&logo=openaigym&logoColor=white)](https://openai.com/codex)
+[![Reviewed by CodeRabbit](https://img.shields.io/badge/Reviewed%20by-CodeRabbit-FF570A.svg?style=for-the-badge&logo=coderabbit&logoColor=white)](https://www.coderabbit.ai)
 
 ## Our social networks
 

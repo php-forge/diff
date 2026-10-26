@@ -21,6 +21,8 @@ use function set_error_handler;
 use function str_ends_with;
 use function str_starts_with;
 
+use const PHP_INT_MAX;
+
 /**
  * Unit tests for {@see UnifiedDiffRenderer} checking byte-exact compatibility with `git diff` output.
  *
@@ -171,13 +173,38 @@ final class UnifiedDiffRendererTest
      * @param list<DiffLine> $script
      */
     #[DataProvider(UnifiedDiffRendererProvider::class . '::mismatchedScripts')]
-    public function throwLogicExceptionWhenTheScriptDoesNotReproduceTheTexts(array $script): void
-    {
-        Expect::exception(LogicException::class)->withMessage(
-            'The differ returned a script that does not reproduce its inputs.',
-        );
+    public function throwLogicExceptionWhenTheScriptDoesNotReproduceTheTexts(
+        string $old,
+        string $new,
+        array $script,
+    ): void {
+        Expect::exception(LogicException::class)
+            ->withMessage('The differ returned a script that does not reproduce its inputs.');
 
-        (new UnifiedDiffRenderer(new FixedScriptDiffer($script)))->render("a\n", "b\n", 'a', 'b');
+        (new UnifiedDiffRenderer(new FixedScriptDiffer($script)))->render($old, $new, 'a', 'b');
+    }
+
+    /**
+     * Ensures a context longer than both texts renders every line in one hunk without overflowing the hunk bounds.
+     */
+    public function treatsMaximumContextAsFullContext(): void
+    {
+        $old = "a\nb\nc\nd\ne\nf\ng\n";
+        $new = "a\nB\nc\nd\ne\nF\ng\n";
+        $expected = "--- a\n+++ b\n@@ -1,7 +1,7 @@\n a\n-b\n+B\n c\n d\n e\n-f\n+F\n g";
+
+        $renderer = new UnifiedDiffRenderer();
+
+        Assert::same(
+            $renderer->render($old, $new, 'a', 'b', PHP_INT_MAX),
+            $expected,
+            'Maximum context should render every line.',
+        );
+        Assert::same(
+            $renderer->render($old, $new, 'a', 'b', 7),
+            $expected,
+            'Maximum context should match a context as long as the texts.',
+        );
     }
 
     /**

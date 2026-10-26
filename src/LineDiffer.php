@@ -22,7 +22,7 @@ use const PHP_INT_MAX;
 use const PHP_INT_MIN;
 
 /**
- * Computes line edit scripts identical to the ones of `git diff` with default settings.
+ * Computes the line edit scripts of `git diff` with default settings, except on inputs that reach Git's cost limit.
  *
  * Ports the pipeline of Git's `xdiff` library: lines are interned, the common head and tail are trimmed, lines without
  * a counterpart and runs of over-popular lines are discarded before the alignment, the remaining lines are aligned with
@@ -37,7 +37,7 @@ use const PHP_INT_MIN;
 final class LineDiffer implements DifferInterface
 {
     /**
-     * Returns the edit script that `git diff` produces to transform `$old` into `$new`.
+     * Returns the edit script that transforms `$old` into `$new`, as `git diff` produces it below Git's cost limit.
      *
      * @param string $old Original input, split into lines on `"\n"`.
      * @param string $new Target input, split into lines on `"\n"`.

@@ -1025,14 +1025,38 @@ final class UnifiedDiffRendererProvider
     }
 
     /**
-     * @return iterable<string, array{list<DiffLine>}>
+     * @return iterable<string, array{string, string, list<DiffLine>}>
      */
     public static function mismatchedScripts(): iterable
     {
+        yield 'empty script' => [
+            "a\n",
+            "b\n",
+            [],
+        ];
+        yield 'fewer lines than both texts' => [
+            "a\nb\nc\n",
+            "a\nb\nd\n",
+            [new DiffLine(DiffOp::Context, 'a')],
+        ];
+        yield 'fewer lines than the new text' => [
+            "a\n",
+            "b\n",
+            [new DiffLine(DiffOp::Remove, 'a')],
+        ];
+        yield 'fewer lines than the old text' => [
+            "a\n",
+            "b\n",
+            [new DiffLine(DiffOp::Add, 'b')],
+        ];
         yield 'more additions than new lines' => [
+            "a\n",
+            "b\n",
             [new DiffLine(DiffOp::Add, 'b'), new DiffLine(DiffOp::Add, 'b')],
         ];
         yield 'more removals than old lines' => [
+            "a\n",
+            "b\n",
             [new DiffLine(DiffOp::Remove, 'a'), new DiffLine(DiffOp::Remove, 'a')],
         ];
     }

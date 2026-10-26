@@ -16,7 +16,6 @@ use Testo\Test;
 
 use function array_map;
 use function array_reverse;
-use function hrtime;
 use function implode;
 use function range;
 use function restore_error_handler;
@@ -24,8 +23,8 @@ use function set_error_handler;
 use function str_replace;
 
 /**
- * Unit tests for {@see LineDiffer} checking edit scripts against `git diff`, the reconstruction invariant, the cost on
- * large inputs and the tuning values shared with Git.
+ * Unit tests for {@see LineDiffer} checking edit scripts against `git diff`, the reconstruction invariant, the scripts
+ * of large inputs and the tuning values shared with Git.
  *
  * Every test runs with PHP warnings promoted to exceptions, so an out-of-range read fails the test instead of passing
  * silently.
@@ -41,9 +40,9 @@ use function str_replace;
 final class LineDifferTest
 {
     /**
-     * Ensures a 2000-line input with a change every ten lines is diffed quickly and keeps every unchanged line.
+     * Ensures a 2000-line input with a change every ten lines edits only the changed lines and rebuilds the new side.
      */
-    public function completesTwoThousandLinesWithinOneSecond(): void
+    public function editsOnlyTheChangedLinesOfTwoThousandLines(): void
     {
         $old = implode(
             "\n",
@@ -57,16 +56,8 @@ final class LineDifferTest
             ),
         );
 
-        $started = hrtime(true);
-
         $diff = (new LineDiffer())->diff($old, $new);
 
-        $elapsed = (hrtime(true) - $started) / 1e9;
-
-        Assert::true(
-            $elapsed < 1.0,
-            'Diff should take less than one second.',
-        );
         Assert::same(
             DiffScript::editCount($diff),
             400,

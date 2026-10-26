@@ -15,9 +15,10 @@ In the notes below, N and M are the line counts of `$old` and `$new`, and D is t
 
 A port of the line diff Git runs by default (`git diff` without options): the Myers algorithm of Git's `xdiff` library,
 followed by its compaction pass and the indent heuristic. For the same lines it returns the same edit script as Git,
-line for line.
+except on very expensive inputs where Git's cost limit applies (see [Difference from Git](#difference-from-git)).
 
-- **Result:** the edit script of `git diff`. Within each change the removals come before the additions.
+- **Result:** the edit script of `git diff`, short of Git's cost limit. Within each change the removals come before the
+  additions.
 - **Complexity:** O((N + M) · D) time and linear memory. Two inputs of a few thousand lines that differ everywhere are
   diffed in milliseconds, because lines without a counterpart never reach the alignment.
 - **Minimality:** not guaranteed. Like Git, it discards over-popular lines before the alignment, so on some inputs the
