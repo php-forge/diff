@@ -1,58 +1,70 @@
 {
-    "name": "yii2-extensions/template",
+    "name": "php-forge/diff",
     "type": "library",
-    "description": "_____",
-    "homepage": "https://yii2-framework.github.io/docs/extensions/template/",
+    "description": "Git-compatible line diff for PHP: a port of Git's xdiff Myers pipeline with the indent heuristic and a unified diff renderer.",
+    "homepage": "https://github.com/php-forge/diff",
     "keywords": [
-        "_____"
+        "diff",
+        "git",
+        "line-diff",
+        "myers",
+        "php-forge",
+        "unified-diff",
+        "xdiff"
     ],
     "license": "BSD-3-Clause",
     "support": {
-        "docs": "https://yii2-framework.github.io/docs/extensions/template/",
-        "issues": "https://github.com/yii2-extensions/template/issues",
-        "source": "https://github.com/yii2-extensions/template"
+        "issues": "https://github.com/php-forge/diff/issues",
+        "source": "https://github.com/php-forge/diff"
     },
+    "authors": [
+        {
+            "name": "Wilmer Arambula",
+            "email": "terabytesoftw@gmail.com",
+            "homepage": "https://github.com/terabytesoftw",
+            "role": "Developer"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.3",
-        "yiisoft/yii2": "^22.0@dev"
+        "php": ">=8.3"
     },
     "require-dev": {
         "infection/infection": "^0.35",
         "maglnet/composer-require-checker": "^4.1",
         "php-forge/coding-standard": "^0.3",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan": "^2.2",
         "phpstan/phpstan-strict-rules": "^2.0.3",
-        "phpunit/phpunit": "^12.5",
-        "yii2-extensions/phpstan": "^0.5"
+        "testo/bridge-infection": "^0.1.9",
+        "testo/testo": "^0.10.56"
     },
     "autoload": {
         "psr-4": {
-            "yii\\template\\": "src"
+            "PHPForge\\Diff\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "yii\\template\\tests\\": "tests"
+            "PHPForge\\Diff\\Tests\\": "tests"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.0.x-dev"
+            "dev-main": "0.1.x-dev"
         }
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
             "infection/extension-installer": true,
-            "phpstan/extension-installer": true,
-            "yiisoft/yii2-composer": true
+            "phpstan/extension-installer": true
         }
     },
     "scripts": {
         "actionlint": "actionlint",
+        "bench": "testo --type=bench",
         "check-dependencies": "composer-require-checker check",
         "codespell": "codespell --config .github/linters/.codespellrc",
         "ecs": "ecs check --fix",
@@ -81,12 +93,13 @@
             "@gitleaks"
         ],
         "static": "phpstan --memory-limit=-1",
-        "tests": "phpunit",
+        "tests": "testo --type=!bench",
         "yamllint": "yamllint -c .github/linters/.yamllint.yml .github",
         "zizmor": "zizmor --persona=pedantic .github"
     },
     "scripts-descriptions": {
         "actionlint": "Lints GitHub Actions workflows with actionlint.",
+        "bench": "Runs the Testo benchmarks.",
         "check-dependencies": "Verifies that used symbols are declared as Composer dependencies.",
         "codespell": "Checks spelling with codespell.",
         "ecs": "Applies coding standard fixes with ECS.",
@@ -102,7 +115,7 @@
         "rector-check": "Previews Rector refactoring without modifying files.",
         "security": "Runs the workflow security and secret scanning checks.",
         "static": "Runs static analysis with PHPStan.",
-        "tests": "Runs PHPUnit.",
+        "tests": "Runs the Testo test suites without the benchmarks.",
         "yamllint": "Lints YAML files with yamllint.",
         "zizmor": "Audits GitHub Actions workflows with zizmor."
     }

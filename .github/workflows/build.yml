@@ -16,9 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  phpunit:
-    uses: yii2-framework/actions/.github/workflows/phpunit.yml@f0e06ea5cc965cff4431177d448add7b7c98668b # v2.0.1
-    with:
-      php-version: '["8.3","8.4","8.5"]'
+  testo:
+    uses: php-forge/actions/.github/workflows/testo.yml@3ddd4c76ad4f2b46a4c81838c2020ed5a21e3cde # v3.0.1
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

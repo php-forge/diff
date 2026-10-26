@@ -9,48 +9,48 @@
     <g>
         <rect class="box-bg" x="20" y="20" width="570" height="100" rx="6"/>
         <rect x="20" y="20" width="4" height="100" fill="#1f883d"/>
-        <text class="title" x="40" y="50">Best Practices</text>
-        <text class="content" x="40" y="78">PSR standards &#8226; Clean code &#8226; Documentation ready</text>
-        <text class="content" x="40" y="98">PER 3.0 + PSR-12 coding standards</text>
+        <text class="title" x="40" y="50">Git-Compatible Line Diff</text>
+        <text class="content" x="40" y="78">Port of Git&#8217;s xdiff &#8226; Myers alignment &#8226; Indent heuristic</text>
+        <text class="content" x="40" y="98">Same edit scripts as git diff with default settings</text>
     </g>
 
     <g>
         <rect class="box-bg" x="610" y="20" width="570" height="100" rx="6"/>
         <rect x="610" y="20" width="4" height="100" fill="#1f883d"/>
-        <text class="title" x="630" y="50">Easy Setup</text>
-        <text class="content" x="630" y="78">Quick start template &#8226; Configuration examples &#8226; Clear structure</text>
-        <text class="content" x="630" y="98">Ready-to-use project scaffolding</text>
+        <text class="title" x="630" y="50">Unified Diff Renderer</text>
+        <text class="content" x="630" y="78">Output of git diff --unified &#8226; Function context</text>
+        <text class="content" x="630" y="98">Renders the scripts of any DifferInterface implementation</text>
     </g>
 
     <g>
         <rect class="box-bg" x="20" y="140" width="570" height="100" rx="6"/>
         <rect x="20" y="140" width="4" height="100" fill="#1f883d"/>
-        <text class="title" x="40" y="170">GitHub Actions</text>
-        <text class="content" x="40" y="198">CI/CD workflows &#8226; Automated testing &#8226; Quality checks</text>
-        <text class="content" x="40" y="218">Super-Linter &#8226; PHPStan &#8226; ECS &#8226; Infection</text>
+        <text class="title" x="40" y="170">Linear Memory, Readable Scripts</text>
+        <text class="content" x="40" y="198">O((N + M) &#183; D) time with linear memory</text>
+        <text class="content" x="40" y="218">Repeated lines never anchor unrelated changes</text>
     </g>
 
     <g>
         <rect class="box-bg" x="610" y="140" width="570" height="100" rx="6"/>
         <rect x="610" y="140" width="4" height="100" fill="#1f883d"/>
-        <text class="title" x="630" y="170">Quality Tools</text>
-        <text class="content" x="630" y="198">PHPStan Level Max &#8226; StyleCI &#8226; Super-Linter integration</text>
-        <text class="content" x="630" y="218">Mutation testing with 100% MSI requirement</text>
+        <text class="title" x="630" y="170">Zero Runtime Dependencies, PHP 8.3+</text>
+        <text class="content" x="630" y="198">No runtime dependencies &#8226; No framework required</text>
+        <text class="content" x="630" y="218">CI matrix: PHP 8.3, 8.4, 8.5 on Ubuntu and Windows</text>
     </g>
 
     <g>
         <rect class="box-bg" x="20" y="260" width="570" height="100" rx="6"/>
         <rect x="20" y="260" width="4" height="100" fill="#1f883d"/>
-        <text class="title" x="40" y="290">PHP 8.3+</text>
-        <text class="content" x="40" y="318">Modern PHP features &#8226; Type safety &#8226; Performance optimizations</text>
-        <text class="content" x="40" y="338">Multi-version CI matrix: 8.3, 8.4, 8.5</text>
+        <text class="title" x="40" y="290">Tested with Testo</text>
+        <text class="content" x="40" y="318">Testo unit tests and benchmarks &#8226; Codecov integration</text>
+        <text class="content" x="40" y="338">Infection mutation testing with 100% MSI requirement</text>
     </g>
 
     <g>
         <rect class="box-bg" x="610" y="260" width="570" height="100" rx="6"/>
         <rect x="610" y="260" width="4" height="100" fill="#1f883d"/>
-        <text class="title" x="630" y="290">Testing Ready</text>
-        <text class="content" x="630" y="318">PHPUnit 11.5 &#8226; Mutation testing &#8226; Codecov integration</text>
-        <text class="content" x="630" y="338">Dependency checker &#8226; Rector automated refactoring</text>
+        <text class="title" x="630" y="290">PHPStan Level Max</text>
+        <text class="content" x="630" y="318">Strict rules &#8226; ECS coding standard &#8226; Rector</text>
+        <text class="content" x="630" y="338">Composer Require Checker &#8226; Markdown and YAML linters</text>
     </g>
 </svg>

@@ -1,33 +1,34 @@
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-    <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://www.yiiframework.com/image/design/logo/yii3_full_for_dark.svg">
-        <source media="(prefers-color-scheme: light)" srcset="https://www.yiiframework.com/image/design/logo/yii3_full_for_light.svg">
-        <img src="https://www.yiiframework.com/image/design/logo/yii3_full_for_light.svg" alt="Yii Framework" width="80%">
-    </picture>
-    <h1 align="center">Template</h1>
+    <a href="https://github.com/php-forge/diff" target="_blank">
+      <img src="https://avatars.githubusercontent.com/u/103309199?s=400&u=ca3561c692f53ed7eb290d3bb226a2828741606f&v=4" width="30%" alt="PHP Forge">
+    </a>
+    <h1 align="center">Diff</h1>
     <br>
 </p>
 <!-- markdownlint-enable MD041 -->
 
 <p align="center">
-    <a href="https://github.com/yii2-extensions/template/actions/workflows/build.yml" target="_blank">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/template/build.yml?style=for-the-badge&label=PHPUnit&logo=github" alt="PHPUnit">
+    <a href="https://github.com/php-forge/diff/actions/workflows/build.yml" target="_blank">
+        <img src="https://img.shields.io/github/actions/workflow/status/php-forge/diff/build.yml?style=for-the-badge&label=Testo&logo=github" alt="Testo">
     </a>
-    <a href="https://dashboard.stryker-mutator.io/reports/github.com/yii2-extensions/template/main" target="_blank">
-        <img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyii2-extensions%2Ftemplate%2Fmain" alt="Mutation Testing">
+    <a href="https://dashboard.stryker-mutator.io/reports/github.com/php-forge/diff/main" target="_blank">
+        <img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fphp-forge%2Fdiff%2Fmain" alt="Mutation Testing">
     </a>
-    <a href="https://github.com/yii2-extensions/template/actions/workflows/static.yml" target="_blank">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/template/static.yml?style=for-the-badge&label=PHPStan&logo=github" alt="PHPStan">
+    <a href="https://github.com/php-forge/diff/actions/workflows/static.yml" target="_blank">
+        <img src="https://img.shields.io/github/actions/workflow/status/php-forge/diff/static.yml?style=for-the-badge&label=PHPStan&logo=github" alt="PHPStan">
     </a>
-    <a href="https://github.com/yii2-extensions/template/actions/workflows/security.yml" target="_blank">
-        <img src="https://img.shields.io/github/actions/workflow/status/yii2-extensions/template/security.yml?style=for-the-badge&label=Security&logo=github" alt="Security">
+    <a href="https://github.com/php-forge/diff/actions/workflows/security.yml" target="_blank">
+        <img src="https://img.shields.io/github/actions/workflow/status/php-forge/diff/security.yml?style=for-the-badge&label=Security&logo=github" alt="Security">
+    </a>
+    <a href="https://claude.com/claude-code" target="_blank">
+        <img src="https://img.shields.io/badge/Built%20with-Claude%20Code-D97757.svg?style=for-the-badge&logo=claude&logoColor=white" alt="Built with Claude Code">
     </a>
 </p>
 
 <p align="center">
-    <strong>A Yii2 extension template to create your own Yii2 extensions</strong><br>
-    <em>PHPUnit, PHPStan, Infection, ECS, and GitHub Actions ready out of the box</em>
+    <strong>Git-compatible line diff for PHP</strong><br>
+    <em>A port of Git's default diff, indent heuristic included, plus a unified diff renderer, with no runtime dependencies.</em>
 </p>
 
 ## Features
@@ -37,67 +38,102 @@
     <img src="./docs/svgs/features-mobile.svg" alt="Feature Overview" style="width: 100%;">
 </picture>
 
-## Quick start
-
-### Installation
+## Installation
 
 ```bash
-composer require github_username/github_repository-name "yiisoft/yii2:^22.0@dev"
+composer require php-forge/diff:^0.1
 ```
 
-### Basic usage
+## Quick start
 
-Describe how to use your extension in a basic way.
+`LineDiffer` implements `PHPForge\Diff\DifferInterface`. `diff()` splits both strings on `"\n"` and returns an ordered
+list of `DiffLine` objects, each tagged with a `DiffOp`:
+
+- `DiffOp::Remove`: the line exists only in `$old`.
+- `DiffOp::Add`: the line exists only in `$new`.
+- `DiffOp::Context`: the line exists on both sides.
+
+Every input line appears exactly once, so dropping the `Add` lines reconstructs `$old` and dropping the `Remove` lines
+reconstructs `$new`.
 
 ```php
-use yii\template\Example;
+use PHPForge\Diff\DiffOp;
+use PHPForge\Diff\LineDiffer;
 
-$example = new Example();
+$old = "apple\nbanana\ncherry";
+$new = "apple\nblueberry\ncherry";
 
-$legacy = $example->getExample(true);
+foreach ((new LineDiffer())->diff($old, $new) as $line) {
+    echo match ($line->op) {
+        DiffOp::Context => ' ',
+        DiffOp::Remove => '-',
+        DiffOp::Add => '+',
+    } . $line->line . "\n";
+}
 ```
+
+```text
+ apple
+-banana
++blueberry
+ cherry
+```
+
+`UnifiedDiffRenderer` turns two texts into the output of `git diff`, hunk headers and function context included.
+
+```php
+use PHPForge\Diff\UnifiedDiffRenderer;
+
+$old = "apple\nbanana\ncherry\n";
+$new = "apple\nblueberry\ncherry\n";
+
+echo (new UnifiedDiffRenderer())->render($old, $new, 'a/fruit.txt', 'b/fruit.txt');
+```
+
+```text
+--- a/fruit.txt
++++ b/fruit.txt
+@@ -1,3 +1,3 @@
+ apple
+-banana
++blueberry
+ cherry
+```
+
+## What you get
+
+| Class                 | Result                                                  | Cost                                         |
+| --------------------- | ------------------------------------------------------- | -------------------------------------------- |
+| `LineDiffer`          | The edit script of `git diff` with its default settings | O((N + M) · D) time, linear memory           |
+| `UnifiedDiffRenderer` | The text of `git diff --unified=<n>`                    | The injected differ plus one pass over edits |
+
+N and M are the line counts of `$old` and `$new`, and D is the edit distance. Like Git, `LineDiffer` favours readable
+scripts over the shortest one, so its edit count is not always minimal. See the [algorithms guide](docs/algorithms.md)
+for the pipeline and its trade-offs.
 
 ## Documentation
 
 - 📚 [Installation guide](docs/installation.md)
-- ⚙️ [Configuration guide](docs/configuration.md)
+- 🧮 [Algorithms guide](docs/algorithms.md)
 - 💡 [Usage examples](docs/examples.md)
 - 🧪 [Testing guide](docs/testing.md)
-
-The guides and the [API reference](https://yii2-framework.github.io/docs/extensions/template/reference/) generated from
-the PHPDoc in `src/` are published at <https://yii2-framework.github.io/docs/extensions/template/>.
-
-## AI assistance
-
-AI agents: read the [documentation index](https://yii2-framework.github.io/docs/llms.txt) and fetch the Markdown version
-of a page by appending `index.md` to its URL. The
-[AI agents guide](https://yii2-framework.github.io/docs/project/ai-agents/) covers skill installation, client setup and
-verification.
-
-- 🧭 [`yii2-framework` skill](https://yii2-framework.github.io/docs/guide/skills/yii2-framework/): Yii 22.0 application
-  conventions.
-
-The hosted documentation covers Yii 22.0. If it does not match the installed revision or is unavailable, use the
-[repository guides](#documentation), the source PHPDoc and the [changelog](CHANGELOG.md).
 
 ## Package information
 
 [![PHP](https://img.shields.io/badge/%3E%3D8.3-777BB4.svg?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/releases/8.3/en.php)
-[![Yii 22.0.x](https://img.shields.io/badge/22.0.x-0073AA.svg?style=for-the-badge&logo=yii&logoColor=white)](https://github.com/yiisoft/yii2/tree/22.0)
+[![Latest Stable Version](https://img.shields.io/packagist/v/php-forge/diff.svg?style=for-the-badge&logo=packagist&logoColor=white&label=Stable)](https://packagist.org/packages/php-forge/diff)
+[![Total Downloads](https://img.shields.io/packagist/dt/php-forge/diff.svg?style=for-the-badge&logo=composer&logoColor=white&label=Downloads)](https://packagist.org/packages/php-forge/diff)
 
 ## Project status
 
-[![Codecov](https://img.shields.io/codecov/c/github/yii2-extensions/template.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Coverage)](https://codecov.io/github/yii2-extensions/template)
-[![PHPStan Level Max](https://img.shields.io/badge/PHPStan-Level%20Max-4F5D95.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yii2-extensions/template/actions/workflows/static.yml)
-[![Quality](https://img.shields.io/github/actions/workflow/status/yii2-extensions/template/quality.yml?style=for-the-badge&label=Quality&logo=github)](https://github.com/yii2-extensions/template/actions/workflows/quality.yml)
-[![StyleCI](https://img.shields.io/badge/StyleCI-Passed-44CC11.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.styleci.io/repos/698621511?branch=main)
+[![Codecov](https://img.shields.io/codecov/c/github/php-forge/diff.svg?style=for-the-badge&logo=codecov&logoColor=white&label=Coverage)](https://codecov.io/github/php-forge/diff)
+[![PHPStan Level Max](https://img.shields.io/badge/PHPStan-Level%20Max-4F5D95.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/php-forge/diff/actions/workflows/static.yml)
+[![Quality](https://img.shields.io/github/actions/workflow/status/php-forge/diff/quality.yml?style=for-the-badge&label=Quality&logo=github)](https://github.com/php-forge/diff/actions/workflows/quality.yml)
 
 ## Our social networks
 
 [![Follow on X](https://img.shields.io/badge/-Follow%20on%20X-1DA1F2.svg?style=for-the-badge&logo=x&logoColor=white&labelColor=000000)](https://x.com/Terabytesoftw)
 [![Follow on Facebook](https://img.shields.io/badge/-Follow%20on%20Facebook-1877F2.svg?style=for-the-badge&logo=facebook&logoColor=white&labelColor=000000)](https://www.facebook.com/wilmer.arambula.9)
-[![Join our Subreddit](https://img.shields.io/badge/-Join%20our%20Subreddit-FF4500.svg?style=for-the-badge&logo=reddit&logoColor=white&labelColor=000000)](https://www.reddit.com/r/Yii2/)
-[![Join on Telegram](https://img.shields.io/badge/-Join%20on%20Telegram-26A5E4.svg?style=for-the-badge&logo=telegram&logoColor=white&labelColor=000000)](https://t.me/yii_framework_in_english)
 
 ## License
 
