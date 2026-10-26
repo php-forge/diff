@@ -17,6 +17,6 @@ permissions:
 
 jobs:
   testo:
-    uses: php-forge/actions/.github/workflows/testo.yml@3ddd4c76ad4f2b46a4c81838c2020ed5a21e3cde # v3.0.1
+    uses: php-forge/actions/.github/workflows/testo.yml@72def618dcf8a77705c26faa53e9f8b1dc1f53bb # v3.0.1
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
