@@ -8,7 +8,7 @@ line edit scripts or unified rendering. The canonical source is `skills/php-forg
 
 ### Automatic Composer installation
 
-Complete the
+Require `php-forge/diff` as described in the [installation guide](installation.md). Then complete the
 [one-time application setup](https://yii2-framework.github.io/docs/project/ai-agents/#composer-installation) to enable
 `llm/skills` and set `auto-sync` to `true` in `skills.json`. Explicitly trust `php-forge/diff` in
 `dependencies.composer.trusted`. The installed package must include the skill bundle declared by `extra.skills.source`.

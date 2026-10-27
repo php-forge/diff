@@ -15,20 +15,22 @@ cannot be found. PHP 8.3 or later is required by the current package.
 
 ## Choose the result
 
-Use `PHPForge\Diff\LineDiffer::diff($old, $new)` for an ordered list of `DiffLine` objects with `DiffOp::Context`,
-`Remove`, or `Add`. It splits both strings literally on `"\n"`: an empty string is one empty line and a trailing newline
-produces an empty final line. Remove `Add` entries to reconstruct the old input, or `Remove` entries for the new input,
-joining the remaining `line` values with `"\n"`. It does not normalize line endings.
+Use `(new PHPForge\Diff\LineDiffer())->diff($old, $new)` for an ordered list of `DiffLine` objects with
+`DiffOp::Context`, `Remove`, or `Add`. It splits both strings literally on `"\n"`: an empty string is one empty line and
+a trailing newline produces an empty final line. Remove `Add` entries to reconstruct the old input, or `Remove` entries
+for the new input, joining the remaining `line` values with `"\n"`. It does not normalize line endings.
 
-Use `UnifiedDiffRenderer::render($old, $new, $fromLabel, $toLabel, $context = 3)` for unified text. It normalizes CRLF
-and CR to LF, returns an empty string for normalized equal texts and otherwise returns a patch without a trailing
-newline or Git's `diff --git` and `index` headers. Negative context is treated as zero. Missing final newlines are
-represented by `\ No newline at end of file`. Labels are supplied by the caller; this renderer does not read files,
-apply patches, or escape labels for untrusted presentation.
+Use `(new PHPForge\Diff\UnifiedDiffRenderer())->render($old, $new, $fromLabel, $toLabel, $context)` for unified text;
+`$context` is optional and defaults to `3`. It normalizes CRLF and CR to LF, returns an empty string for normalized
+equal texts and otherwise returns a patch without a trailing newline or Git's `diff --git` and `index` headers. Negative
+context is treated as zero. Missing final newlines are represented by `\ No newline at end of file`. Labels are supplied
+by the caller; this renderer does not read files, apply patches, or escape labels for untrusted presentation.
 
-A custom `DifferInterface` can be injected into the renderer. Its script must reconstruct both inputs in order;
-otherwise the renderer can throw `LogicException`. Test a non-empty change as well as empty inputs because the renderer
-handles empty sides separately. Do not swallow this exception as an empty diff.
+A custom `DifferInterface` can be injected into the renderer. Its script must reconstruct both inputs in order. The
+renderer takes the rendered lines from the texts by operation position and does not validate `DiffLine::line`: a script
+whose operations do not consume both inputs exactly throws `LogicException`, while a balanced script with wrong
+operations renders an incorrect diff without any error. Test a non-empty change as well as empty inputs because the
+renderer handles empty sides separately. Do not swallow `LogicException` as an empty diff.
 
 The default differ follows Git's default xdiff pipeline and indent heuristic, but lacks Git's cost limit. Its edit
 script is not guaranteed shortest or identical to Git on expensive inputs. Do not promise binary diff support or exact
