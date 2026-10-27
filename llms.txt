@@ -1,0 +1,11 @@
+# php-forge/diff
+
+> Git-compatible line diff for PHP, with a unified diff renderer.
+
+- [README](https://github.com/php-forge/diff/blob/main/README.md): installation, quick start and package overview.
+- [Installation](https://github.com/php-forge/diff/blob/main/docs/installation.md): requirements and setup.
+- [Algorithms](https://github.com/php-forge/diff/blob/main/docs/algorithms.md): algorithm and compatibility limits.
+- [Usage examples](https://github.com/php-forge/diff/blob/main/docs/examples.md): line scripts and unified rendering.
+- [Testing](https://github.com/php-forge/diff/blob/main/docs/testing.md): local verification commands.
+- [AI assistance](https://github.com/php-forge/diff/blob/main/docs/agents.md): skill installation and discovery.
+- [Skill](https://github.com/php-forge/diff/blob/main/skills/php-forge-diff/SKILL.md): integration guidance.

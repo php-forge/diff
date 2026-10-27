@@ -115,6 +115,20 @@ its trade-offs.
 - 🧮 [Algorithms guide](docs/algorithms.md)
 - 💡 [Usage examples](docs/examples.md)
 - 🧪 [Testing guide](docs/testing.md)
+- 🤖 [AI assistance](docs/agents.md)
+
+## AI assistance
+
+AI agents: read the [documentation index](https://yii2-framework.github.io/docs/llms.txt) and fetch the Markdown version
+of a page by appending `index.md` to its URL. The
+[AI agents guide](https://yii2-framework.github.io/docs/project/ai-agents/) covers skill installation, client setup and
+verification.
+
+- 🤖 [`php-forge-diff` skill](docs/agents.md): Line edit scripts and unified diffs.
+
+If hosted documentation does not match the installed revision or is unavailable, use the
+[repository guides](#documentation), the [skill source](skills/php-forge-diff/SKILL.md), the source PHPDoc and the
+[changelog](CHANGELOG.md).
 
 ## Package information
 
@@ -131,7 +145,7 @@ its trade-offs.
 ## Built with AI
 
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-D97757.svg?style=for-the-badge&logo=claude&logoColor=white)](https://claude.com/claude-code)
-[![Reviewed by Codex](https://img.shields.io/badge/Reviewed%20by-Codex-10A37F.svg?style=for-the-badge&logo=openaigym&logoColor=white)](https://openai.com/codex)
+[![Built with Codex](https://img.shields.io/badge/Built%20with-Codex-10A37F.svg?style=for-the-badge&logo=openaigym&logoColor=white)](https://openai.com/codex)
 [![Reviewed by CodeRabbit](https://img.shields.io/badge/Reviewed%20by-CodeRabbit-FF570A.svg?style=for-the-badge&logo=coderabbit&logoColor=white)](https://www.coderabbit.ai)
 
 ## Our social networks
