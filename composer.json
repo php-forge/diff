@@ -51,6 +51,9 @@
         }
     },
     "extra": {
+        "skills": {
+            "source": "skills"
+        },
         "branch-alias": {
             "dev-main": "0.1.x-dev"
         }
